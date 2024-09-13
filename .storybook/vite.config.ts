@@ -1,8 +1,8 @@
 import { defineConfig } from "vite";
-import { resolve } from "node:path";
 import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "tailwindcss";
 import dts from "vite-plugin-dts";
+import { resolve } from "node:path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -14,7 +14,7 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			lib: "/lib",
+			lib: "../lib",
 		},
 	},
 	build: {

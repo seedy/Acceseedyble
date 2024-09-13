@@ -16,7 +16,7 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@biomejs/biome':
-        specifier: ^1.4.1
+        specifier: ^1.9.0
         version: 1.9.0
       '@chromatic-com/storybook':
         specifier: ^1.9.0

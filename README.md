@@ -1,4 +1,4 @@
-# React + TypeScript + Tailwind based Component library
+# React + TypeScript + Tailwind based Component library for a11y
 
 ## Quick install
 

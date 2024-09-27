@@ -15,7 +15,7 @@ interface CarouselIndicatorProps extends ComponentProps<"button"> {
 	children?: ReactNode;
 }
 const CarouselIndicator = forwardRef<HTMLButtonElement, CarouselIndicatorProps>(
-	({ active, children, className, ...props }, forwardedRef) => {
+	({ active, children, ...props }, forwardedRef) => {
 		const indicatorVariantsClassName = indicatorVariants({ active });
 		return (
 			<button
@@ -25,7 +25,6 @@ const CarouselIndicator = forwardRef<HTMLButtonElement, CarouselIndicatorProps>(
 					"m-0 inline-flex items-center justify-center rounded-round border-none text-current",
 					indicatorVariantsClassName,
 					"focus-visible:outline-current hover:cursor-pointer",
-					className,
 				)}
 				{...props}
 			>

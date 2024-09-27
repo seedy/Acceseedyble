@@ -9,7 +9,7 @@ export type CustomKeenSliderHooks =
 
 const keenSliderCarousel =
 	(delay: number) =>
-	(slider: KeenSliderInstance<{}, {}, CustomKeenSliderHooks>) => {
+	(slider: KeenSliderInstance<unknown, unknown, CustomKeenSliderHooks>) => {
 		let timeout: ReturnType<typeof setTimeout>;
 		let busy = false;
 

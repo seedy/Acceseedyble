@@ -1,5 +1,6 @@
 "use client";
 import { cva } from "class-variance-authority";
+import useCarouselContext from "lib/components/Carousel/Context/useCarouselContext";
 import {
 	MouseEvent,
 	ReactNode,
@@ -9,12 +10,10 @@ import {
 	useTransition,
 } from "react";
 
-interface PlayPauseProps {
-	playing?: boolean;
-	// should change when playing boolean changes
-	"aria-label": string;
+interface CarouselPlayPauseProps {
+	getAriaLabel: (playing: boolean) => string;
 	delay?: number;
-	onPlayingChange?: () => void;
+	onClick?: (e: MouseEvent) => void;
 	children: ReactNode;
 }
 
@@ -29,13 +28,13 @@ const childVariants = cva(
 	},
 );
 
-const PlayPause = ({
-	playing,
-	"aria-label": ariaLabel,
-	onPlayingChange,
+const CarouselPlayPause = ({
+	getAriaLabel,
+	onClick,
 	delay = 1000,
 	children,
-}: PlayPauseProps) => {
+}: CarouselPlayPauseProps) => {
+	const { playing, onPlayingChange } = useCarouselContext();
 	const [_isPending, startTransition] = useTransition();
 	const [visible, setVisible] = useState(false);
 
@@ -45,10 +44,8 @@ const PlayPause = ({
 
 	const onTogglePlayPause = (e: MouseEvent) => {
 		e.stopPropagation();
-		if (!onPlayingChange) {
-			return;
-		}
 		onPlayingChange();
+		onClick?.(e);
 	};
 
 	useEffect(() => {
@@ -68,7 +65,7 @@ const PlayPause = ({
 
 	return (
 		<button
-			aria-label={ariaLabel}
+			aria-label={getAriaLabel(playing)}
 			className="absolute inset-0 z-1 m-0 inline-flex items-center justify-center border-none bg-none p-0 text-current focus-visible:bg-black/70 focus-visible:outline-none"
 			onClick={onTogglePlayPause}
 		>
@@ -77,4 +74,4 @@ const PlayPause = ({
 	);
 };
 
-export default PlayPause;
+export default CarouselPlayPause;

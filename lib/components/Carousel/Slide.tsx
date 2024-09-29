@@ -16,7 +16,7 @@ type SlideProps = ComponentProps<"img"> &
 		children: ReactNode;
 	};
 
-const Slide = ({
+const CarouselSlide = ({
 	"aria-description": ariaDescription,
 	"aria-describedby": ariaDescribedBy,
 	alt,
@@ -42,4 +42,4 @@ const Slide = ({
 	);
 };
 
-export default Slide;
+export default CarouselSlide;

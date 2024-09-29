@@ -33,16 +33,19 @@ const useIndicatorsRovingTabIndex = ({
 				},
 				tabIndex: currentIndex === key ? 0 : -1,
 				onFocus: (e: FocusEvent) => {
+					e.stopPropagation();
 					onPause?.(e);
 				},
 				onKeyDown: (e: KeyboardEvent) => {
 					if (e.key === "ArrowLeft") {
+						e.stopPropagation();
 						onPause?.(e);
 						const nextKey = key === 0 ? count - 1 : key - 1;
 						indicatorRefList.current[nextKey]?.focus();
 						return moveToIdx?.(key - 1);
 					}
 					if (e.key === "ArrowRight") {
+						e.stopPropagation();
 						onPause?.(e);
 						const nextKey = key === count - 1 ? 0 : key + 1;
 						indicatorRefList.current[nextKey]?.focus();
@@ -50,6 +53,7 @@ const useIndicatorsRovingTabIndex = ({
 					}
 				},
 				onClick: (e: MouseEvent) => {
+					e.stopPropagation();
 					onPause?.(e);
 					moveToIdx?.(key);
 				},

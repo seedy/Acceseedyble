@@ -45,6 +45,7 @@ const CarouselIndicators = ({
 			{dotKeys.map((key) => (
 				<CarouselIndicator
 					id={`tab-${key}`}
+					key={key}
 					aria-controls={`panel-${key}`}
 					aria-label={renderIndicatorAriaLabel(key + 1)}
 					role="tab"

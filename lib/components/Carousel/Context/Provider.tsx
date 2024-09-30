@@ -39,7 +39,9 @@ const CarouselContextProvider = ({
 	const [internalPlaying, setInternalPlaying] = useControllableState({
 		state: playing,
 		defaultState: true,
-		onChange: onPlayingChange,
+		onChange: (nextValue) => {
+			onPlayingChange?.(nextValue);
+		},
 	});
 
 	const [opacities, setOpacities] = useState<number[]>([]);
@@ -65,9 +67,9 @@ const CarouselContextProvider = ({
 				slider.emit("stopped");
 			},
 			detailsChanged(s) {
-				const nextOpacities = s.track.details.slides.map(
-					(slide) => slide.portion,
-				);
+				const slides = s.track.details?.slides;
+				if (!slides) return;
+				const nextOpacities = slides.map((slide) => slide.portion);
 				setOpacities(nextOpacities);
 			},
 			created() {

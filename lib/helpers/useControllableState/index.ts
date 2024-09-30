@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import {
 	Dispatch,
 	SetStateAction,
@@ -8,21 +9,47 @@ import {
 } from "react";
 
 type SetStateFn<T> = (prevState?: T) => T;
+type NonUndefinable<T> = Exclude<T, undefined>;
 
-// TODO : ensure defaultState not undefined forces return value not undefined
-// https://github.com/radix-ui/primitives/blob/main/packages/react/use-controllable-state/src/useControllableState.tsx#L12
-// https://github.com/radix-ui/primitives/blob/main/packages/react/collapsible/src/Collapsible.tsx
-
-interface useControllableStateParams<T> {
+function useControllableState<T>(params: {
 	state?: T;
-	defaultState?: T;
-	onChange?: (value: T) => void;
-}
-const useControllableState = <T>({
+	defaultState?: never;
+	onChange?: (value: NonUndefinable<T>) => void;
+}): [
+	NonUndefinable<T> | undefined,
+	Dispatch<SetStateAction<NonUndefinable<T>>>,
+];
+
+function useControllableState<T>(params: {
+	state?: never;
+	defaultState: T;
+	onChange?: (value: NonUndefinable<T>) => void;
+}): [T, Dispatch<SetStateAction<NonUndefinable<T>>>];
+
+function useControllableState<T, K>(params: {
+	state: T;
+	defaultState: K;
+	onChange?: (value: NonUndefinable<T>) => void;
+}): [NonUndefinable<T> | K, Dispatch<SetStateAction<NonUndefinable<T>>>];
+
+function useControllableState<T>(params: {
+	state?: never;
+	defaultState?: never;
+	onChange?: (value: NonUndefinable<T>) => void;
+}): [undefined, Dispatch<SetStateAction<NonUndefinable<T>>>];
+
+function useControllableState<T, K>({
 	state,
 	defaultState,
 	onChange,
-}: useControllableStateParams<T>) => {
+}: {
+	state?: T;
+	defaultState?: K;
+	onChange?: (value: NonUndefinable<T>) => void;
+}): [
+	(T & ({} | null)) | K | undefined,
+	Dispatch<SetStateAction<NonUndefinable<T>>>,
+] {
 	const [uncontrolledState, setUncontrolledState] = useState(defaultState);
 	const isControlled = state !== undefined;
 	const value = isControlled ? state : uncontrolledState;
@@ -34,30 +61,31 @@ const useControllableState = <T>({
 
 	useEffect(() => {}, []);
 
-	const setValue = useCallback<Dispatch<SetStateAction<T | undefined>>>(
+	const setValue = useCallback<Dispatch<SetStateAction<NonUndefinable<T>>>>(
 		(nextValue) => {
 			if (!isControlled) {
 				setUncontrolledState((prev) => {
-					const setter = nextValue as SetStateFn<T>;
+					const setter = nextValue as SetStateFn<K>;
 					const settedNextValue =
 						typeof setter === "function" ? setter(prev) : nextValue;
-					if (settedNextValue !== prev) {
-						onChangeRef.current?.(settedNextValue as T);
+					if (settedNextValue !== prev && settedNextValue !== undefined) {
+						onChangeRef.current?.(settedNextValue as NonUndefinable<T>);
 					}
-					return settedNextValue as T;
+					return settedNextValue as K;
 				});
 			} else {
 				const setter = nextValue as SetStateFn<T>;
 				const settedNextValue =
-					typeof setter === "function" ? setter(value) : nextValue;
-				if (settedNextValue !== value)
-					onChangeRef.current?.(settedNextValue as T);
+					typeof setter === "function" ? setter(state) : nextValue;
+				if (settedNextValue !== state) {
+					onChangeRef.current?.(settedNextValue as NonUndefinable<T>);
+				}
 			}
 		},
-		[isControlled, value, onChangeRef, setUncontrolledState],
+		[isControlled, state],
 	);
 
 	return [value, setValue] as const;
-};
+}
 
 export default useControllableState;

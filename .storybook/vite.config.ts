@@ -14,7 +14,7 @@ export default defineConfig({
 	},
 	resolve: {
 		alias: {
-			lib: "../lib",
+			lib: resolve(__dirname, "lib"),
 		},
 	},
 	build: {
